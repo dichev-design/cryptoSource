@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+    background: #0b0f1a;
+    color: #ffffff;
+}
+
+a {
+    color: #4fd1c5;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.navbar {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #1f2937;
+}
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #1f2937;
+    font-size: 14px;
+    color: #9ca3af;
+}
