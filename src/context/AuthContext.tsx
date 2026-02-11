@@ -7,51 +7,84 @@ interface ExtendedAuthContextType extends AuthContextType {
 
 const AuthContext = createContext<ExtendedAuthContextType | undefined>(undefined);
 
-const STORAGE_KEY = "yao_auth_user";
+const SESSION_KEY = "yao_session_user";
+const USERS_KEY = "yao_registered_users";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // Seed admin account
     useEffect(() => {
-        const storedUser = localStorage.getItem(STORAGE_KEY);
+        const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
 
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        const adminExists = users.some((u: any) => u.email === "admin");
+
+        if (!adminExists) {
+            users.push({
+                id: "admin-id",
+                username: "Admin",
+                email: "admin",
+                password: "admin",
+            });
+
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        const storedSession = localStorage.getItem(SESSION_KEY);
+        if (storedSession) {
+            setUser(JSON.parse(storedSession));
         }
 
         setLoading(false);
     }, []);
 
     const register = (username: string, email: string, password: string) => {
-        const newUser: User = {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+
+        const newUser = {
             id: crypto.randomUUID(),
             username,
             email,
+            password,
         };
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-        setUser(newUser);
+        users.push(newUser);
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+        const sessionUser: User = {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+        };
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser));
+        setUser(sessionUser);
     };
 
     const login = (email: string, password: string) => {
-        const storedUser = localStorage.getItem(STORAGE_KEY);
+        const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
 
-        if (!storedUser) {
-            throw new Error("No user found");
-        }
+        const foundUser = users.find(
+            (u: any) => u.email === email && u.password === password
+        );
 
-        const parsedUser: User = JSON.parse(storedUser);
-
-        if (parsedUser.email !== email) {
+        if (!foundUser) {
             throw new Error("Invalid credentials");
         }
 
-        setUser(parsedUser);
+        const sessionUser: User = {
+            id: foundUser.id,
+            username: foundUser.username,
+            email: foundUser.email,
+        };
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser));
+        setUser(sessionUser);
     };
 
     const logout = () => {
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(SESSION_KEY);
         setUser(null);
     };
 
