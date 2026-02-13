@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import CapyBarra from "../assets/capybarra.png";
 
 export default function Landing() {
     // Animated counters hook
@@ -104,7 +105,7 @@ export default function Landing() {
 
                     {/* RIGHT SIDE */}
                     <div>
-                        <img src="/capybarra.png" alt="Game Character" style={{
+                        <img src={CapyBarra} alt="Game Character" style={{
                             width: "280px",
                             animation: "float 3s ease-in-out infinite",
                             transform: "scaleX(-1)",
