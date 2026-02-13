@@ -5,6 +5,7 @@ import type { DashboardData, Investment } from "../types/dashboard";
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
 
 
+
 export default function Dashboard() {
     const { user, logout } = useAuth();
     const [data, setData] = useState<DashboardData>({
@@ -104,6 +105,34 @@ export default function Dashboard() {
         borderRadius: "12px",
         boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
     };
+
+    // Hook to animate number from previous value to target
+    const useAnimatedNumber = (value: number, duration = 1000) => {
+        const [animatedValue, setAnimatedValue] = useState(value);
+
+        useEffect(() => {
+            let start = animatedValue;
+            const diff = value - start;
+            const increment = diff / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= value) || (increment < 0 && current <= value)) {
+                    setAnimatedValue(value);
+                    clearInterval(timer);
+                } else {
+                    setAnimatedValue(current);
+                }
+            }, 16);
+
+            return () => clearInterval(timer);
+        }, [value]);
+
+        return animatedValue;
+    };
+    const animatedBalance = useAnimatedNumber(data.balance);
+
     return (
         <div style={{
             padding: "2rem",
@@ -145,7 +174,7 @@ export default function Dashboard() {
                 {/* Balance Card */}
                 <div style={cardStyle}>
                     <h2>Balance</h2>
-                    <h3>${data.balance.toFixed(2)}</h3>
+                    <h3>${animatedBalance.toFixed(2)}</h3>
                 </div>
 
                 {/* Deposit Card */}
