@@ -98,64 +98,100 @@ export default function Dashboard() {
         const days = (Date.now() - investment.startDate) / (1000 * 60 * 60 * 24);
         return investment.amount * (1 + investment.growthRate * days);
     };
-
+    const cardStyle: React.CSSProperties = {
+        background: "#1e293b",
+        padding: "1.5rem",
+        borderRadius: "12px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+    };
     return (
-        <div style={{ padding: "2rem" }}>
-            <h1>Welcome, {user?.username}</h1>
+        <div style={{
+            padding: "2rem",
+            minHeight: "100vh",
+            background: "#0f172a",
+            color: "white"
+        }}>
+            <h1 style={{ marginBottom: "1rem" }}>
+                Welcome, {user?.username}
+            </h1>
 
-            <button onClick={logout}>Logout</button>
+            <button onClick={logout} style={{ marginBottom: "2rem" }}>
+                Logout
+            </button>
 
-            <hr />
+            <div style={{
+                display: "grid",
+                gap: "1.5rem",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))"
+            }}>
 
-            <h2>Wallet</h2>
-
-            {data.walletAddress ? (
-                <div>
-                    <p>Connected:</p>
-                    <p style={{ fontWeight: "bold" }}>{data.walletAddress}</p>
+                {/* Wallet Card */}
+                <div style={cardStyle}>
+                    <h2>Wallet</h2>
+                    {data.walletAddress ? (
+                        <>
+                            <p>Connected</p>
+                            <p style={{ fontWeight: "bold", wordBreak: "break-all" }}>
+                                {data.walletAddress}
+                            </p>
+                        </>
+                    ) : (
+                        <button onClick={handleConnectWallet}>
+                            Connect Wallet
+                        </button>
+                    )}
                 </div>
-            ) : (
-                <button onClick={handleConnectWallet}>
-                    Connect Wallet
-                </button>
-            )}
 
-            <h2>Balance: ${data.balance.toFixed(2)}</h2>
-
-            <div style={{ marginTop: "1rem" }}>
-                <h3>Deposit</h3>
-                <input
-                    type="number"
-                    value={depositAmount}
-                    onChange={(e) => setDepositAmount(e.target.value)}
-                    placeholder="Enter amount"
-                />
-                <button onClick={handleDeposit}>Deposit</button>
-            </div>
-
-            <div style={{ marginTop: "1rem" }}>
-                <h3>Invest</h3>
-                <input
-                    type="number"
-                    value={investAmount}
-                    onChange={(e) => setInvestAmount(e.target.value)}
-                    placeholder="Enter amount"
-                />
-                <button onClick={handleInvest}>Invest</button>
-            </div>
-
-            <hr />
-
-            <h3>Your Investments</h3>
-
-            {data.investments.length === 0 && <p>No investments yet.</p>}
-
-            {data.investments.map((inv) => (
-                <div key={inv.id} style={{ marginBottom: "1rem" }}>
-                    <p>Initial: ${inv.amount.toFixed(2)}</p>
-                    <p>Current Value: ${calculateGrowth(inv).toFixed(2)}</p>
+                {/* Balance Card */}
+                <div style={cardStyle}>
+                    <h2>Balance</h2>
+                    <h3>${data.balance.toFixed(2)}</h3>
                 </div>
-            ))}
+
+                {/* Deposit Card */}
+                <div style={cardStyle}>
+                    <h2>Deposit</h2>
+                    <input
+                        type="number"
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                        placeholder="Enter amount"
+                    />
+                    <button onClick={handleDeposit}>Deposit</button>
+                </div>
+
+                {/* Invest Card */}
+                <div style={cardStyle}>
+                    <h2>Invest</h2>
+                    <input
+                        type="number"
+                        value={investAmount}
+                        onChange={(e) => setInvestAmount(e.target.value)}
+                        placeholder="Enter amount"
+                    />
+                    <button onClick={handleInvest}>Invest</button>
+                </div>
+
+                {/* Investments Card */}
+                <div style={cardStyle}>
+                    <h2>Your Investments</h2>
+
+                    {data.investments.length === 0 && (
+                        <p>No investments yet.</p>
+                    )}
+
+                    {data.investments.map(inv => (
+                        <div key={inv.id} style={{ marginBottom: "1rem" }}>
+                            <p>Initial: ${inv.amount.toFixed(2)}</p>
+                            <p>
+                                Current Value: $
+                                {calculateGrowth(inv).toFixed(2)}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
         </div>
     );
 }
