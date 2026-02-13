@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         textShadow: "0 0 10px #22d3ee",
                     }}
                 >
-                    YAO Blockchain
+                    cryptoSource
                 </Link>
 
                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
