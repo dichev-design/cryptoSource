@@ -1,8 +1,25 @@
 /* TAPPING GAME - MOBILE OPTIMIZED */
 
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    touch-action: manipulation;
+}
+
 .tapping-game-container {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background: #0f172a;
     color: white;
     display: flex;
@@ -11,6 +28,12 @@
     margin: 0;
     font-family: 'Inter', system-ui, sans-serif;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    touch-action: manipulation;
 }
 
 /* HEADER */
@@ -19,6 +42,11 @@
     padding: 1rem;
     border-bottom: 1px solid #334155;
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    touch-action: manipulation;
 }
 
 .header-content {
@@ -402,28 +430,27 @@
     -ms-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
+    touch-action: manipulation;
 }
 
 /* DISABLE DEFAULT BROWSER ZOOM ON DOUBLE TAP */
 input,
 button {
     font-size: 16px;
+    -webkit-user-select: none;
 }
 
-/* SCROLLBAR STYLING */
-.game-area::-webkit-scrollbar {
-    width: 4px;
+/* Prevent pinch zoom */
+body {
+    touch-action: manipulation;
 }
 
-.game-area::-webkit-scrollbar-track {
-    background: #0f172a;
+/* Hide scrollbars completely */
+::-webkit-scrollbar {
+    display: none;
 }
 
-.game-area::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 2px;
-}
-
-.game-area::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
