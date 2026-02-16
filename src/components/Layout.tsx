@@ -59,6 +59,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 Dashboard
                             </Link>
 
+                            <Link
+                                to="/tapping-game"
+                                style={linkStyle}
+                            >
+                                Tapping Game
+                            </Link>
+
                             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                                 {/* Username pill */}
                                 <span style={linkStyle}>{user.username}</span>
