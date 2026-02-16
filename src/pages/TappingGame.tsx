@@ -160,32 +160,6 @@ export default function TappingGame() {
 
     return (
         <div className="tapping-game-container">
-            {/* HEADER */}
-            <div className="tapping-header">
-                <div className="header-content">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <h1>CryptoSource Tapper</h1>
-                        {inTelegram && (
-                            <span style={{
-                                fontSize: '0.75rem',
-                                background: '#06b6d4',
-                                color: '#0f172a',
-                                padding: '0.25rem 0.5rem',
-                                borderRadius: '4px',
-                                fontWeight: 'bold'
-                            }}>
-                                📱 Telegram
-                            </span>
-                        )}
-                    </div>
-                    {user && (
-                        <button className="logout-btn" onClick={logout}>
-                            Logout
-                        </button>
-                    )}
-                </div>
-            </div>
-
             {/* MAIN GAME AREA */}
             <div className="game-area">
                 {/* CHARACTER */}
@@ -283,9 +257,14 @@ export default function TappingGame() {
                 </div>
             </div>
 
-            {/* FOOTER */}
+            {/* BACK BUTTON FOOTER */}
             <footer className="game-footer">
-                <p>© 2026 CryptoSource | Tap Game</p>
+                <button
+                    className="back-button"
+                    onClick={() => navigate('/')}
+                >
+                    ← Back
+                </button>
             </footer>
         </div>
     );

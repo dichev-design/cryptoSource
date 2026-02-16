@@ -9,8 +9,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <Layout>
-      <Routes>
+    <Routes>
+      {/* Tapping Game - No Layout (No Navigation) */}
+      <Route path="/tapping-game" element={<TappingGame />} />
+
+      {/* All other routes with Layout */}
+      <Route
+        element={<Layout />}
+      >
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -22,9 +28,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/tapping-game" element={<TappingGame />} />
-      </Routes>
-    </Layout>
+      </Route>
+    </Routes>
   );
 }
 

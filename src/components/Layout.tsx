@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout() {
     const { user, logout } = useAuth();
 
     return (
@@ -107,7 +107,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
             </nav>
 
-            <main>{children}</main>
+            <main>
+                <Outlet />
+            </main>
         </div>
     );
 }
