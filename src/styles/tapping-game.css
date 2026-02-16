@@ -36,6 +36,9 @@
 .tapping-header {
     background: #1e293b;
     padding: 1rem;
+    padding-top: calc(1rem + var(--safe-area-inset-top));
+    padding-right: calc(1rem + var(--safe-area-inset-right));
+    padding-left: calc(1rem + var(--safe-area-inset-left));
     border-bottom: 1px solid #334155;
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
     flex-shrink: 0;
@@ -380,6 +383,9 @@
 /* FOOTER */
 .game-footer {
     padding: 1.5rem 1rem;
+    padding-bottom: calc(1.5rem + var(--safe-area-inset-bottom));
+    padding-right: calc(1rem + var(--safe-area-inset-right));
+    padding-left: calc(1rem + var(--safe-area-inset-left));
     text-align: center;
     border-top: 1px solid #334155;
     color: #94a3b8;

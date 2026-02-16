@@ -114,18 +114,53 @@ export const initTelegram = (): TelegramWebApp | null => {
   }
 
   const webApp = window.Telegram.WebApp;
-  webApp.ready();
 
-  // Expand app to fullscreen
-  if (!webApp.isExpanded) {
-    webApp.expand();
+  try {
+    // Signal that the app is ready
+    webApp.ready();
+
+    // Expand app to fullscreen (use all available space)
+    if (!webApp.isExpanded) {
+      webApp.expand();
+    }
+
+    // Request fullscreen mode (additional immersive experience)
+    if (webApp.requestFullscreen && !window.document.fullscreenElement) {
+      webApp.requestFullscreen();
+    }
+
+    // Set theme colors to match our app
+    webApp.setBackgroundColor("#0f172a");
+    webApp.setHeaderColor("#1e293b");
+    webApp.setBottomBarColor("#0f172a");
+
+    // Disable vertical swipes to prevent interference with game
+    if (webApp.isVerticalSwipesEnabled !== undefined) {
+      webApp.isVerticalSwipesEnabled = false;
+    }
+
+    // Set header color to match
+    try {
+      webApp.setHeaderColor("rgb(30, 41, 59)");
+    } catch (e) {
+      // Fallback if setHeaderColor not available
+      webApp.setHeaderColor("#1e293b");
+    }
+
+    // Log viewport info for debugging
+    console.log("Telegram initialized:", {
+      isExpanded: webApp.isExpanded,
+      viewportHeight: webApp.viewportHeight,
+      viewportStableHeight: webApp.viewportStableHeight,
+      safeAreaInset: webApp.safeAreaInset,
+      platform: webApp.platform,
+    });
+
+    return webApp;
+  } catch (error) {
+    console.error("Error initializing Telegram:", error);
+    return webApp;
   }
-
-  // Set theme colors to match our app
-  webApp.setBackgroundColor("#0f172a");
-  webApp.setHeaderColor("#1e293b");
-
-  return webApp;
 };
 
 // Get Telegram user data
@@ -217,6 +252,60 @@ export const getTelegramInitData = (): string | null => {
   }
 
   return window.Telegram.WebApp.initData;
+};
+
+// Get viewport dimensions
+export const getTelegramViewport = () => {
+  if (typeof window === "undefined" || !window.Telegram) {
+    return { height: window.innerHeight, stableHeight: window.innerHeight };
+  }
+
+  const webApp = window.Telegram.WebApp;
+  return {
+    height: webApp.viewportHeight,
+    stableHeight: webApp.viewportStableHeight,
+    isExpanded: webApp.isExpanded,
+  };
+};
+
+// Get safe area insets (for notches, status bars, etc.)
+export const getSafeAreaInsets = () => {
+  if (typeof window === "undefined" || !window.Telegram) {
+    return { top: 0, left: 0, bottom: 0, right: 0 };
+  }
+
+  const webApp = window.Telegram.WebApp;
+  return webApp.safeAreaInset || { top: 0, left: 0, bottom: 0, right: 0 };
+};
+
+// Get content safe area insets
+export const getContentSafeAreaInsets = () => {
+  if (typeof window === "undefined" || !window.Telegram) {
+    return { top: 0, left: 0, bottom: 0, right: 0 };
+  }
+
+  const webApp = window.Telegram.WebApp;
+  return (
+    webApp.contentSafeAreaInset || { top: 0, left: 0, bottom: 0, right: 0 }
+  );
+};
+
+// Apply safe area CSS variables to root element
+export const applySafeAreaInsets = () => {
+  if (typeof window === "undefined" || !window.Telegram) {
+    return;
+  }
+
+  const insets = getSafeAreaInsets();
+  const root = document.documentElement;
+
+  // Set CSS variables for safe area
+  root.style.setProperty("--safe-area-inset-top", `${insets.top}px`);
+  root.style.setProperty("--safe-area-inset-right", `${insets.right}px`);
+  root.style.setProperty("--safe-area-inset-bottom", `${insets.bottom}px`);
+  root.style.setProperty("--safe-area-inset-left", `${insets.left}px`);
+
+  console.log("Safe area insets applied:", insets);
 };
 
 // Close the Telegram app

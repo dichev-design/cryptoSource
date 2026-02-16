@@ -261,3 +261,6 @@ export default function TappingGameMobile() {
         </div>
     );
 }
+
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>

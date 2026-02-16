@@ -8,7 +8,8 @@ import {
     getTelegramUser,
     isInTelegram,
     triggerHaptic,
-    triggerNotification
+    triggerNotification,
+    applySafeAreaInsets
 } from "../services/telegramService";
 import { claimCoinReward, syncGameData } from "../services/gameApi";
 
@@ -39,6 +40,7 @@ export default function TappingGame() {
     useEffect(() => {
         if (inTelegram) {
             initTelegram();
+            applySafeAreaInsets();
             console.log('Telegram app initialized');
             console.log('Telegram user:', telegramUser);
         }

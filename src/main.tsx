@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles/global.css";
 import { AuthProvider } from "./context/AuthContext";
 import { HashRouter } from "react-router-dom";
+import { applySafeAreaInsets, isInTelegram } from "./services/telegramService";
 
 // Optimize touch responsiveness - only prevent multi-touch zoom, allow single touch
 document.addEventListener('touchmove', (e) => {
@@ -27,6 +28,14 @@ document.addEventListener('touchend', (e) => {
   }
   lastTouchEnd = now;
 }, { passive: false });
+
+// Apply Telegram safe area insets if available
+if (isInTelegram()) {
+  applySafeAreaInsets();
+
+  // Re-apply on viewport changes
+  window.addEventListener('resize', applySafeAreaInsets);
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
