@@ -28,12 +28,6 @@ document.addEventListener('touchend', (e) => {
   lastTouchEnd = now;
 }, { passive: false });
 
-// Prevent scrolling on body without blocking performance
-document.body.style.overflow = 'hidden';
-document.documentElement.style.overflow = 'hidden';
-document.body.style.position = 'fixed';
-document.body.style.width = '100%';
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
@@ -43,4 +37,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </AuthProvider>
   </React.StrictMode>
 );
-);
+
