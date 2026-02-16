@@ -159,7 +159,7 @@ export default function TappingGame() {
     const rewardProgress = (coins / COINS_FOR_REWARD) * 100;
 
     return (
-        <div className="tapping-game-container">
+        <div className={`tapping-game-container ${inTelegram ? 'in-telegram' : ''}`}>
             {/* MAIN GAME AREA */}
             <div className="game-area">
                 {/* CHARACTER */}
