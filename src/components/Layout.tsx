@@ -38,6 +38,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     {!user ? (
                         <>
                             <Link
+                                to="/tapping-game"
+                                style={linkStyle}
+                            >
+                                Tapping Game
+                            </Link>
+                            <Link
                                 to="/login"
                                 style={linkStyle}
                             >

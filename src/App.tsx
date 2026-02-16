@@ -24,11 +24,7 @@ function App() {
         />
         <Route
           path="/tapping-game"
-          element={
-            <ProtectedRoute>
-              <TappingGame />
-            </ProtectedRoute>
-          }
+          element={<TappingGame />}
         />
       </Routes>
     </Layout>

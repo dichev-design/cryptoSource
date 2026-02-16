@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CapyBarra from "../assets/capybarra.png";
 import "../styles/tapping-game.css";
+import {
+    initTelegram,
+    getTelegramUser,
+    isInTelegram,
+    triggerHaptic,
+    triggerNotification
+} from "../services/telegramService";
+import { claimCoinReward, syncGameData } from "../services/gameApi";
 
 interface FloatingCoin {
     id: string;
@@ -10,20 +19,34 @@ interface FloatingCoin {
 }
 
 export default function TappingGame() {
+    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [coins, setCoins] = useState(0);
     const [floatingCoins, setFloatingCoins] = useState<FloatingCoin[]>([]);
     const [coinsPerTap] = useState(1);
     const [claimedRewards, setClaimedRewards] = useState(0);
+    const [inTelegram] = useState(() => isInTelegram());
+    const [telegramUser] = useState(() => getTelegramUser());
 
     const COINS_FOR_REWARD = 100000;
     const REWARD_AMOUNT = 10;
 
+    // Get user ID or use guest ID
+    const userId = user?.id || 'guest';
+    const isGuest = !user;
+
+    // Initialize Telegram
+    useEffect(() => {
+        if (inTelegram) {
+            initTelegram();
+            console.log('Telegram app initialized');
+            console.log('Telegram user:', telegramUser);
+        }
+    }, [inTelegram, telegramUser]);
+
     // Load coins from localStorage
     useEffect(() => {
-        if (!user) return;
-
-        const storageKey = `tapping_game_${user.id}`;
+        const storageKey = `tapping_game_${userId}`;
         const stored = localStorage.getItem(storageKey);
 
         if (stored) {
@@ -31,13 +54,11 @@ export default function TappingGame() {
             setCoins(gameData.coins || 0);
             setClaimedRewards(gameData.claimedRewards || 0);
         }
-    }, [user]);
+    }, [userId]);
 
-    // Save coins to localStorage
+    // Save coins to localStorage and sync to server
     useEffect(() => {
-        if (!user) return;
-
-        const storageKey = `tapping_game_${user.id}`;
+        const storageKey = `tapping_game_${userId}`;
         localStorage.setItem(
             storageKey,
             JSON.stringify({
@@ -46,7 +67,18 @@ export default function TappingGame() {
                 lastUpdated: Date.now(),
             })
         );
-    }, [coins, claimedRewards, user]);
+
+        // Only sync to server if logged in
+        if (!isGuest) {
+            const syncInterval = setInterval(() => {
+                syncGameData(userId, coins, claimedRewards).catch((err) => {
+                    console.warn('Failed to sync game data:', err);
+                });
+            }, 10000);
+
+            return () => clearInterval(syncInterval);
+        }
+    }, [coins, claimedRewards, userId, isGuest]);
 
     const handleTap = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -55,6 +87,9 @@ export default function TappingGame() {
 
         // Add coins
         setCoins((prev) => prev + coinsPerTap);
+
+        // Haptic feedback
+        triggerHaptic('light');
 
         // Create floating coin animation
         const coinId = crypto.randomUUID();
@@ -66,13 +101,38 @@ export default function TappingGame() {
         }, 1000);
     };
 
-    const handleClaimReward = () => {
-        if (coins >= COINS_FOR_REWARD) {
-            setCoins((prev) => prev - COINS_FOR_REWARD);
-            setClaimedRewards((prev) => prev + REWARD_AMOUNT);
+    const handleClaimReward = async () => {
+        if (coins < COINS_FOR_REWARD) return;
 
-            // TODO: Call API to add $10 to website account
-            alert(`Claimed $${REWARD_AMOUNT}! Added to your account balance.`);
+        // If guest, redirect to login
+        if (isGuest) {
+            alert('Please login to claim your reward!');
+            navigate('/login');
+            return;
+        }
+
+        if (user) {
+            try {
+                // Call API to claim reward
+                const response = await claimCoinReward(user.id, COINS_FOR_REWARD);
+
+                if (response.success) {
+                    setCoins((prev) => prev - COINS_FOR_REWARD);
+                    setClaimedRewards((prev) => prev + REWARD_AMOUNT);
+
+                    // Success feedback
+                    triggerNotification('success');
+
+                    alert(`Claimed $${REWARD_AMOUNT}! Added to your account balance.`);
+                } else {
+                    triggerNotification('error');
+                    alert(response.message || 'Failed to claim reward');
+                }
+            } catch (error) {
+                console.error('Error claiming reward:', error);
+                triggerNotification('error');
+                alert('Error claiming reward. Please try again.');
+            }
         }
     };
 
@@ -90,10 +150,26 @@ export default function TappingGame() {
             {/* HEADER */}
             <div className="tapping-header">
                 <div className="header-content">
-                    <h1>CryptoSource Tapper</h1>
-                    <button className="logout-btn" onClick={logout}>
-                        Logout
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <h1>CryptoSource Tapper</h1>
+                        {inTelegram && (
+                            <span style={{
+                                fontSize: '0.75rem',
+                                background: '#06b6d4',
+                                color: '#0f172a',
+                                padding: '0.25rem 0.5rem',
+                                borderRadius: '4px',
+                                fontWeight: 'bold'
+                            }}>
+                                📱 Telegram
+                            </span>
+                        )}
+                    </div>
+                    {user && (
+                        <button className="logout-btn" onClick={logout}>
+                            Logout
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -156,12 +232,19 @@ export default function TappingGame() {
                     </div>
 
                     {coins >= COINS_FOR_REWARD ? (
-                        <button
-                            className="claim-button active"
-                            onClick={handleClaimReward}
-                        >
-                            💰 Claim ${REWARD_AMOUNT} Reward
-                        </button>
+                        <>
+                            <button
+                                className="claim-button active"
+                                onClick={handleClaimReward}
+                            >
+                                💰 Claim ${REWARD_AMOUNT} Reward
+                            </button>
+                            {isGuest && (
+                                <p className="coins-needed" style={{ color: '#06b6d4', marginTop: '1rem' }}>
+                                    Login to claim your reward!
+                                </p>
+                            )}
+                        </>
                     ) : (
                         <p className="coins-needed">
                             {remainingCoins.toLocaleString()} coins to go!
