@@ -34,7 +34,7 @@
 
 /* TELEGRAM-SPECIFIC LAYOUT: push content down, larger character, smaller tap area */
 .tapping-game-container.in-telegram .game-area {
-    padding-top: 8rem;
+    padding-top: 6rem;
     display: flex;
     flex-direction: column;
     align-items: center;
