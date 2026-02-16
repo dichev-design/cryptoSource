@@ -80,11 +80,7 @@ export default function TappingGame() {
         }
     }, [coins, claimedRewards, userId, isGuest]);
 
-    const handleTap = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
+    const processTap = (x: number, y: number) => {
         // Add coins
         setCoins((prev) => prev + coinsPerTap);
 
@@ -99,6 +95,21 @@ export default function TappingGame() {
         setTimeout(() => {
             setFloatingCoins((prev) => prev.filter((c) => c.id !== coinId));
         }, 1000);
+    };
+
+    const handleTap = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        processTap(x, y);
+    };
+
+    const handleTouchTap = (e: React.TouchEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        processTap(x, y);
     };
 
     const handleClaimReward = async () => {
@@ -195,7 +206,12 @@ export default function TappingGame() {
                 </div>
 
                 {/* TAPPABLE CIRCLE */}
-                <div className="tap-area" onClick={handleTap}>
+                <div
+                    className="tap-area"
+                    onClick={handleTap}
+                    onTouchStart={handleTouchTap}
+                    style={{ touchAction: 'manipulation' }}
+                >
                     <div className="tap-circle">
                         <span className="tap-text">TAP!</span>
                     </div>
