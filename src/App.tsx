@@ -22,10 +22,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/tapping-game"
-          element={<TappingGame />}
-        />
+        <Route path="/tapping-game" element={<TappingGame />} />
       </Routes>
     </Layout>
   );

@@ -1,0 +1,460 @@
+/* TAPPING GAME - MOBILE OPTIMIZED */
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.mobile-game-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    touch-action: none;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-touch-callout: none;
+}
+
+/* HEADER - MINIMAL */
+.mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+    min-height: 50px;
+}
+
+.mobile-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #06b6d4;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.telegram-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background: #06b6d4;
+    color: #0f172a;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.mobile-logout-btn {
+    padding: 0.4rem 0.8rem;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-logout-btn:active {
+    transform: scale(0.95);
+}
+
+/* GAME CONTENT - FILLS REMAINING SPACE */
+.mobile-game-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    overflow: hidden;
+    gap: 0.5rem;
+}
+
+/* CHARACTER - COMPACT */
+.mobile-character {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    max-height: 100px;
+}
+
+.mobile-capybara {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.3));
+    animation: mobile-float 3s ease-in-out infinite;
+}
+
+@keyframes mobile-float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* COIN DISPLAY - PROMINENT */
+.mobile-coin-display {
+    flex-shrink: 0;
+    text-align: center;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.mobile-coin-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #06b6d4;
+    text-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+    margin: 0;
+    line-height: 1;
+}
+
+.mobile-coin-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* TAP AREA - MAIN EVENT */
+.mobile-tap-area {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    width: 90%;
+    max-width: 280px;
+    aspect-ratio: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.mobile-tap-circle {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.1);
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+}
+
+.mobile-tap-circle:active {
+    transform: scale(0.95) translate3d(0, 0, 0);
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.mobile-tap-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+/* FLOATING COINS */
+.mobile-floating-coin {
+    position: absolute;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    pointer-events: none;
+    animation: mobile-floatUp 1s ease-out forwards;
+    z-index: 10;
+}
+
+@keyframes mobile-floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-80px) scale(1.5);
+    }
+}
+
+/* REWARD SECTION - COMPACT */
+.mobile-reward-container {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.mobile-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #06b6d4, #3b82f6);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.mobile-progress-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.mobile-ready {
+    color: #10b981;
+    font-weight: bold;
+    animation: pulse-text 1s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* CLAIM BUTTON */
+.mobile-claim-button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: #6b7280;
+    color: white;
+    transition: all 0.3s;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-claim-button.active {
+    background: linear-gradient(90deg, #06b6d4, #3b82f6);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    animation: pulse-button 1.5s ease-in-out infinite;
+}
+
+.mobile-claim-button.active:active {
+    transform: scale(0.95);
+}
+
+.mobile-claim-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@keyframes pulse-button {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.8);
+    }
+}
+
+/* STATS - BOTTOM */
+.mobile-stats {
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 280px;
+}
+
+.mobile-stat-item {
+    flex: 1;
+    background: #1e293b;
+    padding: 0.5rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #334155;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.mobile-stat-label {
+    display: block;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mobile-stat-value {
+    display: block;
+    font-size: 1.1rem;
+    color: #06b6d4;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+/* MOBILE TOUCH OPTIMIZATION */
+@media (pointer: coarse) {
+    .mobile-claim-button {
+        padding: 0.9rem;
+        font-size: 1rem;
+    }
+
+    .mobile-logout-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* LANDSCAPE MODE - ADJUST LAYOUT */
+@media (orientation: landscape) and (max-height: 600px) {
+    .mobile-header {
+        min-height: 40px;
+        padding: 0.5rem 1rem;
+    }
+
+    .mobile-header h1 {
+        font-size: 1rem;
+    }
+
+    .mobile-character {
+        display: none;
+    }
+
+    .mobile-coin-count {
+        font-size: 1.5rem;
+    }
+
+    .mobile-tap-area {
+        max-width: 220px;
+    }
+
+    .mobile-capybara {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* SMALL SCREEN ADJUSTMENTS */
+@media (max-height: 500px) {
+    .mobile-character {
+        display: none;
+    }
+
+    .mobile-coin-count {
+        font-size: 1.75rem;
+    }
+
+    .mobile-tap-area {
+        max-width: 200px;
+    }
+}
+
+/* PREVENT SELECTION AND TEXT HIGHLIGHT */
+.mobile-game-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+}
+
+/* DISABLE DEFAULT BROWSER ZOOM ON DOUBLE TAP */
+input,
+button {
+    font-size: 16px;
+    -webkit-user-select: none;
+}
+
+/* Prevent pinch zoom */
+body {
+    touch-action: manipulation;
+}
+
+/* Hide scrollbars completely */
+::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
