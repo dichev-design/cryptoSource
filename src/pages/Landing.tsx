@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CapyBarra from "../assets/capybarra.png";
+import AliceImg from "../assets/Alice.jpg";
+import BobImg from "../assets/Bob.jpg";
+import CharlieImg from "../assets/Charlie.jpg";
 
 export default function Landing() {
     // Animated counters hook
@@ -41,9 +44,9 @@ export default function Landing() {
 
     // Team members
     const team = [
-        { name: "Alice", role: "CEO", image: "/team1.png" },
-        { name: "Bob", role: "Lead Developer", image: "/team2.png" },
-        { name: "Charlie", role: "Designer", image: "/team3.png" },
+        { name: "Alice", role: "CEO", image: AliceImg },
+        { name: "Bob", role: "Lead Developer", image: BobImg },
+        { name: "Charlie", role: "Designer", image: CharlieImg },
     ];
 
     // Roadmap items
@@ -311,19 +314,35 @@ export default function Landing() {
             {/* TEAM */}
             <section style={{ padding: "4rem 2rem", textAlign: "center" }}>
                 <h2 style={{ fontSize: "2.5rem", marginBottom: "2rem" }}>Meet the Team</h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: "2rem", maxWidth: "900px", margin: "0 auto" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: "2rem", maxWidth: "900px", margin: "0 auto" }}>
                     {team.map((member, idx) => (
-                        <div key={idx} style={{ background: "#1e293b", padding: "1.5rem", borderRadius: "12px", boxShadow: "0 8px 16px rgba(0,0,0,0.3)" }}>
-                            <img src={member.image} alt={member.name} style={{ width: "100px", borderRadius: "50%", marginBottom: "1rem" }} />
-                            <h3 style={{ marginBottom: "0.3rem", color: "#06b6d4" }}>{member.name}</h3>
-                            <p>{member.role}</p>
+                        <div key={idx} style={{ background: "#1e293b", borderRadius: "12px", boxShadow: "0 8px 16px rgba(0,0,0,0.3)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+                            {/* Image Container with fixed aspect ratio */}
+                            <div style={{ width: "100%", height: "300px", overflow: "hidden" }}>
+                                <img
+                                    src={member.image}
+                                    alt={member.name}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                        objectPosition: "center"
+                                    }}
+                                />
+                            </div>
+                            {/* Text Content */}
+                            <div style={{ padding: "1.5rem" }}>
+                                <h3 style={{ marginBottom: "0.5rem", marginTop: "0", color: "#06b6d4", fontSize: "1.3rem" }}>{member.name}</h3>
+                                <p style={{ margin: "0", color: "#94a3b8", fontSize: "0.9rem" }}>{member.role}</p>
+                            </div>
                         </div>
                     ))}
                 </div>
             </section>
 
             {/* FOOTER */}
-            <footer style={{ padding: "2rem", background: "#0f172a", color: "white", textAlign: "center", borderTop: "1px solid #1e293b" }}>
+            < footer style={{ padding: "2rem", background: "#0f172a", color: "white", textAlign: "center", borderTop: "1px solid #1e293b" }
+            }>
                 <p>📍 123 Crypto St, Blockchain City</p>
                 <p>✉️ contact@cryptoSource-blockchain.com</p>
                 <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
@@ -332,7 +351,7 @@ export default function Landing() {
                     <a href="#" style={{ color: "#4ade80" }}>Telegram</a>
                 </div>
                 <p style={{ marginTop: "1rem" }}>© 2026 cryptoSource Blockchain</p>
-            </footer>
-        </div>
+            </footer >
+        </div >
     );
 }
