@@ -99,7 +99,8 @@ export default function Landing() {
                             textDecoration: "none",
                             fontWeight: "bold",
                             boxShadow: "0 0 15px rgba(6, 182, 212, 0.5)",
-                            transition: "0.3s"
+                            transition: "0.3s",
+                            cursor: "pointer",
                         }}>
                             Start Mining
                         </Link>
@@ -116,7 +117,7 @@ export default function Landing() {
                 </div>
 
                 {/* COIN ANIMATIONS */}
-                <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
+                <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
                     {[...Array(10)].map((_, i) => (
                         <div key={i} style={{
                             position: "absolute",
@@ -128,6 +129,7 @@ export default function Landing() {
                             top: `${Math.random() * 80}%`,
                             animation: `floatCoin ${3 + Math.random() * 2}s ease-in-out infinite`,
                             opacity: 0.8,
+                            pointerEvents: "none",
                         }} />
                     ))}
                     <style>{`
