@@ -1,43 +1,43 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
-import { useNavigate } from "react-router-dom";
+import CapyBarra from "../assets/capybarra.png";
+
 
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
 
 export default function Dashboard() {
 
     const { user, logout } = useAuth();
-    const navigate = useNavigate();
 
     const [data, setData] = useState<DashboardData>({
         balance: 0,
         investments: [],
+        walletAddress: ""
     });
 
     const [initialized, setInitialized] = useState(false);
+
     const [depositAmount, setDepositAmount] = useState("");
     const [investAmount, setInvestAmount] = useState("");
+    const [withdrawAmount, setWithdrawAmount] = useState("");
 
 
-
-    // Load user-specific dashboard data
+    // Load data
     useEffect(() => {
+
         if (!user) return;
 
         const stored = localStorage.getItem(getStorageKey(user.id));
 
-        if (stored) {
-            setData(JSON.parse(stored));
-        }
+        if (stored) setData(JSON.parse(stored));
 
         setInitialized(true);
 
     }, [user]);
 
 
-
-    // Persist changes
+    // Save data
     useEffect(() => {
 
         if (!user || !initialized) return;
@@ -50,8 +50,21 @@ export default function Dashboard() {
     }, [data, user, initialized]);
 
 
+    // Live refresh for growth
+    useEffect(() => {
 
-    // Deposit logic
+        const interval = setInterval(() => {
+
+            setData(prev => ({ ...prev }));
+
+        }, 1000);
+
+        return () => clearInterval(interval);
+
+    }, []);
+
+
+    // Deposit
     const handleDeposit = () => {
 
         const amount = Number(depositAmount);
@@ -60,16 +73,14 @@ export default function Dashboard() {
 
         setData(prev => ({
             ...prev,
-            balance: prev.balance + amount,
+            balance: prev.balance + amount
         }));
 
         setDepositAmount("");
-
     };
 
 
-
-    // Invest logic
+    // Invest
     const handleInvest = () => {
 
         const amount = Number(investAmount);
@@ -79,15 +90,27 @@ export default function Dashboard() {
         if (amount > data.balance) return;
 
         const newInvestment: Investment = {
+
             id: crypto.randomUUID(),
+
             amount,
+
             startDate: Date.now(),
-            growthRate: 0.02,
+
+            growthRate: 0.02, // SLOW GROWTH RATE
+
+            plan: "standard"
+
         };
 
         setData(prev => ({
+
+            ...prev,
+
             balance: prev.balance - amount,
-            investments: [...prev.investments, newInvestment],
+
+            investments: [...prev.investments, newInvestment]
+
         }));
 
         setInvestAmount("");
@@ -95,8 +118,106 @@ export default function Dashboard() {
     };
 
 
+    // Withdraw
+    const handleWithdraw = () => {
 
-    // Generate fake wallet
+        const amount = Number(withdrawAmount);
+
+        if (!amount || amount <= 0) return;
+
+        const totalAvailable = getTotalAvailable();
+
+        if (amount > totalAvailable) {
+
+            alert("Not enough funds");
+
+            return;
+
+        }
+
+        // Withdraw from balance first
+
+        let newBalance = data.balance;
+
+        let remaining = amount;
+
+        if (newBalance >= remaining) {
+
+            newBalance -= remaining;
+
+            remaining = 0;
+
+        }
+
+        else {
+
+            remaining -= newBalance;
+
+            newBalance = 0;
+
+        }
+
+        // Withdraw from investments if needed
+
+        const updatedInvestments = data.investments.map(inv => {
+
+            if (remaining <= 0) return inv;
+
+            const currentValue = calculateGrowth(inv);
+
+            if (currentValue <= remaining) {
+
+                remaining -= currentValue;
+
+                return null;
+
+            }
+
+            return inv;
+
+        }).filter(Boolean) as Investment[];
+
+
+        setData({
+
+            ...data,
+
+            balance: newBalance,
+
+            investments: updatedInvestments
+
+        });
+
+
+        setWithdrawAmount("");
+
+    };
+
+
+
+    const calculateGrowth = (inv: Investment) => {
+
+        const seconds = (Date.now() - inv.startDate) / 1000;
+
+        return inv.amount + seconds * inv.growthRate;
+
+    };
+
+    const getTotalAvailable = () => {
+
+        const investmentValue = data.investments.reduce(
+
+            (total, inv) => total + calculateGrowth(inv),
+
+            0
+
+        );
+
+        return data.balance + investmentValue;
+
+    };
+
+
     const generateWalletAddress = () => {
 
         const chars = "abcdef0123456789";
@@ -114,377 +235,395 @@ export default function Dashboard() {
     };
 
 
-
     const handleConnectWallet = () => {
 
         if (data.walletAddress) return;
 
-        const newAddress = generateWalletAddress();
-
         setData(prev => ({
             ...prev,
-            walletAddress: newAddress,
+            walletAddress: generateWalletAddress()
         }));
 
     };
 
 
+    const handleRemoveWallet = () => {
 
-    // Growth calculation
-    const calculateGrowth = (investment: Investment) => {
-
-        const days =
-            (Date.now() - investment.startDate)
-            / (1000 * 60 * 60 * 24);
-
-        return investment.amount
-            * (1 + investment.growthRate * days);
+        setData(prev => ({
+            ...prev,
+            walletAddress: ""
+        }));
 
     };
 
 
+    const getCharacterTier = () => {
 
-    // Card styling
+        if (data.investments.length === 0) {
+
+            return { tier: "none", name: "No Character", description: "Make an investment to unlock your capybara" };
+
+        }
+
+        const totalInvested = data.investments.reduce((sum, inv) => sum + inv.amount, 0);
+
+        if (totalInvested >= 500) {
+
+            return { tier: "premium", name: "Premium Capybara", description: "You've unlocked the premium tier!" };
+
+        } else if (totalInvested >= 200) {
+
+            return { tier: "standard", name: "Standard Capybara", description: "You've reached the standard tier!" };
+
+        } else {
+
+            return { tier: "basic", name: "Basic Capybara", description: "Welcome to the basic tier!" };
+
+        }
+
+    };
+
+
+    // STYLES
+
     const cardStyle: React.CSSProperties = {
 
         background: "#1e293b",
 
-        padding: "1.5rem",
+        padding: "25px",
 
-        borderRadius: "12px",
+        borderRadius: "15px",
 
-        boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+        boxShadow: "0 0 20px rgba(0,255,255,0.1)",
 
-    };
+        transition: "0.3s",
 
+        wordBreak: "break-word",
 
-
-    // Animated number hook
-    const useAnimatedNumber = (
-        value: number,
-        duration = 1000
-    ) => {
-
-        const [animatedValue, setAnimatedValue]
-            = useState(value);
-
-        useEffect(() => {
-
-            let start = animatedValue;
-
-            const diff = value - start;
-
-            const increment = diff / (duration / 16);
-
-            let current = start;
-
-            const timer = setInterval(() => {
-
-                current += increment;
-
-                if (
-                    (increment > 0 && current >= value)
-                    ||
-                    (increment < 0 && current <= value)
-                ) {
-
-                    setAnimatedValue(value);
-
-                    clearInterval(timer);
-
-                }
-
-                else {
-
-                    setAnimatedValue(current);
-
-                }
-
-            }, 16);
-
-            return () => clearInterval(timer);
-
-        }, [value]);
-
-        return animatedValue;
+        overflow: "hidden"
 
     };
 
 
+    const inputStyle: React.CSSProperties = {
 
-    const animatedBalance =
-        useAnimatedNumber(data.balance);
+        width: "100%",
+
+        padding: "12px",
+
+        marginTop: "10px",
+
+        marginBottom: "10px",
+
+        borderRadius: "8px",
+
+        border: "none",
+
+        outline: "none",
+
+        background: "#0f172a",
+
+        color: "white",
+
+        fontSize: "16px"
+
+    };
 
 
+    const buttonStyle: React.CSSProperties = {
 
-    // ===== UI =====
+        width: "100%",
+
+        padding: "12px",
+
+        borderRadius: "8px",
+
+        border: "none",
+
+        background: "linear-gradient(90deg, cyan, blue)",
+
+        color: "white",
+
+        fontWeight: "bold",
+
+        cursor: "pointer",
+
+        boxShadow: "0 0 10px cyan"
+
+    };
+
 
     return (
 
         <div style={{
-
-            padding: "2rem",
-
             minHeight: "100vh",
-
             background: "#0f172a",
-
-            color: "white"
-
+            color: "white",
+            padding: "30px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between"
         }}>
 
+            {/* CONTENT */}
 
+            <div>
 
-            {/* ===== NAVBAR ===== */}
+                <h1>Welcome {user?.username}</h1>
 
-            <div style={{
-
-                display: "flex",
-
-                justifyContent: "space-between",
-
-                alignItems: "center",
-
-                marginBottom: "2rem",
-
-                paddingBottom: "1rem",
-
-                borderBottom: "1px solid #334155"
-
-            }}>
-
-                <h1>
-
-                    Dashboard
-
-                </h1>
-
+                <button className="primaryButton" onClick={logout}
+                    style={{
+                        marginBottom: "20px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "none",
+                        background: "red",
+                        color: "white"
+                    }}>
+                    Logout
+                </button>
 
 
                 <div style={{
-
-                    display: "flex",
-
-                    gap: "1rem"
-
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit,minmax(350px,1fr))",
+                    gap: "20px"
                 }}>
 
 
+                    {/* WALLET */}
 
-                    <button
+                    <div style={cardStyle}>
 
-                        onClick={() => navigate("/dashboard")}
+                        <h2>Wallet</h2>
 
-                        style={{
-                            padding: "10px 20px",
-                            fontWeight: "bold",
-                            cursor: "pointer"
-                        }}
+                        {data.walletAddress ?
 
-                    >
+                            <>
+                                <p style={{
+                                    wordBreak: "break-all",
+                                    overflowWrap: "break-word",
+                                    fontSize: "12px",
+                                    fontFamily: "monospace",
+                                    color: "#06b6d4",
+                                    textAlign: "center",
+                                    padding: "10px",
+                                    background: "#0f172a",
+                                    borderRadius: "8px",
+                                    marginTop: "10px"
+                                }}>{data.walletAddress}</p>
 
-                        Dashboard
+                                <button
+                                    style={{
+                                        ...buttonStyle,
+                                        background: "#ef4444",
+                                        marginTop: "10px"
+                                    }}
+                                    onClick={handleRemoveWallet}
+                                >
+                                    Remove Wallet
+                                </button>
+                            </>
 
-                    </button>
+                            :
 
+                            <button
+                                style={buttonStyle}
+                                onClick={handleConnectWallet}
+                            >
+                                Connect Wallet
+                            </button>
 
+                        }
 
-                    <button
-
-                        onClick={logout}
-
-                        style={{
-                            padding: "10px 20px",
-                            cursor: "pointer"
-                        }}
-
-                    >
-
-                        Logout
-
-                    </button>
-
-
-
-                </div>
-
-            </div>
-
-
-
-            {/* Welcome */}
-
-            <h2 style={{
-
-                marginBottom: "1.5rem"
-
-            }}>
-
-                Welcome, {user?.username}
-
-            </h2>
+                    </div>
 
 
+                    {/* BALANCE */}
 
-            {/* ===== GRID ===== */}
+                    <div style={cardStyle}>
 
-            <div style={{
+                        <h2>Balance</h2>
 
-                display: "grid",
+                        <h1 style={{
+                            color: "cyan",
+                            textShadow: "0 0 15px cyan"
+                        }}>
+                            ${getTotalAvailable().toFixed(2)}
+                        </h1>
 
-                gap: "1.5rem",
-
-                gridTemplateColumns:
-                    "repeat(auto-fit, minmax(280px, 1fr))"
-
-            }}>
+                    </div>
 
 
+                    {/* CHARACTER */}
 
-                {/* Wallet */}
-                <div style={cardStyle}>
+                    <div style={cardStyle}>
 
-                    <h2>Wallet</h2>
+                        <h2>Your Character</h2>
 
-                    {data.walletAddress ? (
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            minHeight: "220px"
+                        }}>
 
-                        <>
-                            <p>Connected</p>
+                            {getCharacterTier().tier !== "none" && (
+                                <img
+                                    src={CapyBarra}
+                                    alt="Capybara Character"
+                                    style={{
+                                        width: "150px",
+                                        height: "150px",
+                                        objectFit: "contain",
+                                        marginBottom: "10px"
+                                    }}
+                                />
+                            )}
+
+                            <h3 style={{
+                                color: "#06b6d4",
+                                marginBottom: "5px"
+                            }}>
+                                {getCharacterTier().name}
+                            </h3>
 
                             <p style={{
-                                fontWeight: "bold",
-                                wordBreak: "break-all"
+                                fontSize: "14px",
+                                color: "#94a3b8",
+                                textAlign: "center"
                             }}>
-                                {data.walletAddress}
-                            </p>
-                        </>
-
-                    ) : (
-
-                        <button
-                            onClick={handleConnectWallet}
-                        >
-                            Connect Wallet
-                        </button>
-
-                    )}
-
-                </div>
-
-
-
-                {/* Balance */}
-                <div style={cardStyle}>
-
-                    <h2>Balance</h2>
-
-                    <h3>
-                        $
-                        {animatedBalance.toFixed(2)}
-                    </h3>
-
-                </div>
-
-
-
-                {/* Deposit */}
-                <div style={cardStyle}>
-
-                    <h2>Deposit</h2>
-
-                    <input
-
-                        type="number"
-
-                        value={depositAmount}
-
-                        onChange={(e) =>
-                            setDepositAmount(e.target.value)
-                        }
-
-                        placeholder="Enter amount"
-
-                    />
-
-                    <button onClick={handleDeposit}>
-                        Deposit
-                    </button>
-
-                </div>
-
-
-
-                {/* Invest */}
-                <div style={cardStyle}>
-
-                    <h2>Invest</h2>
-
-                    <input
-
-                        type="number"
-
-                        value={investAmount}
-
-                        onChange={(e) =>
-                            setInvestAmount(e.target.value)
-                        }
-
-                        placeholder="Enter amount"
-
-                    />
-
-                    <button onClick={handleInvest}>
-                        Invest
-                    </button>
-
-                </div>
-
-
-
-                {/* Investments */}
-                <div style={cardStyle}>
-
-                    <h2>Your Investments</h2>
-
-                    {data.investments.length === 0 &&
-                        <p>No investments yet.</p>
-                    }
-
-
-
-                    {data.investments.map(inv => (
-
-                        <div
-                            key={inv.id}
-                            style={{
-                                marginBottom: "1rem"
-                            }}
-                        >
-
-                            <p>
-                                Initial:
-                                ${inv.amount.toFixed(2)}
-                            </p>
-
-                            <p>
-
-                                Current Value:
-
-                                $
-                                {calculateGrowth(inv)
-                                    .toFixed(2)}
-
+                                {getCharacterTier().description}
                             </p>
 
                         </div>
 
-                    ))}
+                    </div>
+
+
+                    {/* DEPOSIT */}
+
+                    <div style={cardStyle}>
+
+                        <h2>Deposit</h2>
+
+                        <input
+                            style={inputStyle}
+                            value={depositAmount}
+                            onChange={e => setDepositAmount(e.target.value)}
+                            placeholder="Amount"
+                        />
+
+                        <button style={buttonStyle}
+                            onClick={handleDeposit}>
+                            Deposit
+                        </button>
+
+                    </div>
+
+
+                    {/* INVEST */}
+
+                    <div style={cardStyle}>
+
+                        <h2>Invest</h2>
+
+                        <input
+                            style={inputStyle}
+                            value={investAmount}
+                            onChange={e => setInvestAmount(e.target.value)}
+                            placeholder="Amount"
+                        />
+
+                        <button style={buttonStyle}
+                            onClick={handleInvest}>
+                            Invest
+                        </button>
+
+                    </div>
+
+
+                    {/* WITHDRAW */}
+
+                    <div style={cardStyle}>
+
+                        <h2>Withdraw</h2>
+
+                        <input
+                            style={inputStyle}
+                            value={withdrawAmount}
+                            onChange={e => setWithdrawAmount(e.target.value)}
+                            placeholder="Amount"
+                        />
+
+                        <button style={buttonStyle}
+                            onClick={handleWithdraw}>
+                            Withdraw
+                        </button>
+
+                    </div>
+
+
+                    {/* INVESTMENTS */}
+
+                    <div style={cardStyle}>
+
+                        <h2>Investments</h2>
+
+                        {data.investments.map(inv => {
+
+                            const current = calculateGrowth(inv);
+
+                            const profit = current - inv.amount;
+
+                            return (
+
+
+                                <div key={inv.id}>
+
+                                    <p>${current.toFixed(2)}</p>
+
+                                    <p style={{
+                                        color: "lime",
+                                        textShadow: "0 0 10px lime"
+                                    }}>
+                                        +${profit.toFixed(2)}
+                                    </p>
+
+                                </div>
+
+                            );
+
+                        })}
+
+                    </div>
+
 
                 </div>
 
-
-
             </div>
+
+
+
+            {/* FOOTER */}
+
+            <footer style={{
+                marginTop: "50px",
+                padding: "20px",
+                textAlign: "center",
+                borderTop: "1px solid #334155",
+                color: "#94a3b8"
+            }}>
+
+                © 2026 CryptoSource
+
+                <br />
+
+                contact@cryptosource.com
+
+            </footer>
+
 
         </div>
 

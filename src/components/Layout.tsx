@@ -12,10 +12,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "1rem 2rem",
-                    background: "rgba(15, 23, 42, 0.95)", // semi-transparent dark
+                    background: "var(--bg-secondary)", // semi-transparent dark
                     backdropFilter: "blur(10px)",           // glassy effect
                     color: "white",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                    boxShadow: "0 0 20px rgba(0,255,255,0.1)",
                     position: "sticky",
                     top: 0,
                     zIndex: 1000,
@@ -78,11 +78,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                     }}
                                     onMouseOver={(e) => {
                                         e.currentTarget.style.transform = "scale(1.05)";
-                                        e.currentTarget.style.boxShadow = "0 0 15px #facc15";
+                                        e.currentTarget.style.boxShadow = "0 0 15px rgba(6, 182, 212, 0.9)";
                                     }}
                                     onMouseOut={(e) => {
                                         e.currentTarget.style.transform = "scale(1)";
-                                        e.currentTarget.style.boxShadow = "0 0 10px #facc15";
+                                        e.currentTarget.style.boxShadow = "0 0 10px rgba(6, 182, 212, 0.5)";
                                     }}
                                 >
                                     Logout
@@ -106,15 +106,16 @@ const linkStyle: React.CSSProperties = {
     borderRadius: "6px",
     transition: "all 0.2s",
     textShadow: "0 0 5px #22d3ee",
+    cursor: "pointer",
 };
 
 const accountPillStyle: React.CSSProperties = {
     padding: "0.4rem 1rem",
     borderRadius: "20px",
-    background: "linear-gradient(90deg, #facc15, #22d3ee)",
-    color: "#0f172a",
+    background: "linear-gradient(90deg, #06b6d4, #3b82f6)",
+    color: "white",
     fontWeight: "bold",
-    boxShadow: "0 0 10px #facc15",
+    boxShadow: "0 0 10px rgba(6, 182, 212, 0.5)",
     cursor: "pointer",
     transition: "all 0.2s",
     textAlign: "center",

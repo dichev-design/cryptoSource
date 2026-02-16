@@ -82,7 +82,7 @@ export default function Landing() {
                         <h1 style={{
                             fontSize: "3rem",
                             marginBottom: "1rem",
-                            background: "linear-gradient(90deg,#22d3ee,#facc15)",
+                            background: "linear-gradient(90deg,#06b6d4,#3b82f6)",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent"
                         }}>
@@ -93,11 +93,13 @@ export default function Landing() {
                         </p>
                         <Link to="/register" style={{
                             padding: "0.8rem 1.5rem",
-                            background: "#facc15",
-                            color: "#0f172a",
+                            background: "linear-gradient(90deg, #06b6d4, #3b82f6)",
+                            color: "white",
                             borderRadius: "8px",
                             textDecoration: "none",
                             fontWeight: "bold",
+                            boxShadow: "0 0 15px rgba(6, 182, 212, 0.5)",
+                            transition: "0.3s"
                         }}>
                             Start Mining
                         </Link>
@@ -140,8 +142,8 @@ export default function Landing() {
 
             {/* STATS */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: "2rem", textAlign: "center", padding: "2rem 0", maxWidth: "900px", margin: "0 auto" }}>
-                <div><h2 style={{ color: "#22d3ee" }}>{players.toLocaleString()}</h2><p>Active Players</p></div>
-                <div><h2 style={{ color: "#facc15" }}>${invested.toLocaleString()}</h2><p>Total Invested</p></div>
+                <div><h2 style={{ color: "#06b6d4" }}>{players.toLocaleString()}</h2><p>Active Players</p></div>
+                <div><h2 style={{ color: "#3b82f6" }}>${invested.toLocaleString()}</h2><p>Total Invested</p></div>
                 <div><h2 style={{ color: "#4ade80" }}>${rewards.toLocaleString()}</h2><p>Rewards Paid</p></div>
             </div>
 
@@ -161,25 +163,25 @@ export default function Landing() {
                                 background: "#1e293b",
                                 padding: "2rem",
                                 borderRadius: "16px",
-                                boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+                                boxShadow: "0 0 20px rgba(0,255,255,0.1)",
                                 transition: "all 0.3s ease",
                                 cursor: "pointer",
                             }}
                             onMouseOver={(e) => {
                                 const target = e.currentTarget as HTMLDivElement;
                                 target.style.transform = "scale(1.05)";
-                                target.style.boxShadow = "0 15px 30px rgba(250,204,21,0.7)";
+                                target.style.boxShadow = "0 0 30px rgba(6,182,212,0.3)";
                             }}
                             onMouseOut={(e) => {
                                 const target = e.currentTarget as HTMLDivElement;
                                 target.style.transform = "scale(1)";
-                                target.style.boxShadow = "0 10px 25px rgba(0,0,0,0.5)";
+                                target.style.boxShadow = "0 0 20px rgba(0,255,255,0.1)";
                             }}
                         >
-                            <h3 style={{ marginBottom: "0.5rem", color: "#facc15", fontSize: "1.8rem" }}>{plan.name}</h3>
+                            <h3 style={{ marginBottom: "0.5rem", color: "#06b6d4", fontSize: "1.8rem" }}>{plan.name}</h3>
                             <p style={{ marginBottom: "1rem" }}>{plan.description}</p>
 
-                            <p><strong>ROI Daily:</strong> <span style={{ color: "#22d3ee", fontWeight: "bold" }}>{plan.roi}%</span></p>
+                            <p><strong>ROI Daily:</strong> <span style={{ color: "#06b6d4", fontWeight: "bold" }}>{plan.roi}%</span></p>
                             <p><strong>Price:</strong> ${plan.price}</p>
                             <p><strong>Minimum Deposit:</strong> ${plan.price}</p>
                             <p><strong>Duration:</strong> {plan.roi > 2 ? "30 days" : "15 days"}</p>
@@ -189,22 +191,23 @@ export default function Landing() {
                                 marginTop: "1.5rem",
                                 display: "inline-block",
                                 padding: "0.7rem 1.5rem",
-                                background: "linear-gradient(90deg,#22d3ee,#facc15)",
-                                color: "#0f172a",
+                                background: "linear-gradient(90deg,#06b6d4,#3b82f6)",
+                                color: "white",
                                 borderRadius: "12px",
                                 fontWeight: "bold",
                                 textDecoration: "none",
                                 transition: "all 0.3s",
+                                boxShadow: "0 0 10px rgba(6, 182, 212, 0.5)"
                             }}
                                 onMouseOver={(e) => {
                                     const target = e.currentTarget as HTMLAnchorElement;
                                     target.style.transform = "scale(1.05)";
-                                    target.style.boxShadow = "0 0 15px #facc15";
+                                    target.style.boxShadow = "0 0 20px rgba(6, 182, 212, 0.8)";
                                 }}
                                 onMouseOut={(e) => {
                                     const target = e.currentTarget as HTMLAnchorElement;
                                     target.style.transform = "scale(1)";
-                                    target.style.boxShadow = "none";
+                                    target.style.boxShadow = "0 0 10px rgba(6, 182, 212, 0.5)";
                                 }}
                             >
                                 Deposit
@@ -232,7 +235,7 @@ export default function Landing() {
                         bottom: 0,
                         left: "50%",
                         width: "4px",
-                        background: "#22d3ee",
+                        background: "#06b6d4",
                         transform: "translateX(-50%)",
                         borderRadius: "2px",
                     }}>
@@ -242,7 +245,7 @@ export default function Landing() {
                             left: 0,
                             width: "100%",
                             height: "0%",
-                            background: "linear-gradient(to bottom, #22d3ee, #facc15)",
+                            background: "linear-gradient(to bottom, #06b6d4, #3b82f6)",
                             animation: "lineGlow 3s forwards",
                         }}></div>
                     </div>
@@ -265,8 +268,8 @@ export default function Landing() {
                                 width: "24px",
                                 height: "24px",
                                 borderRadius: "50%",
-                                background: "#facc15",
-                                border: "4px solid #22d3ee",
+                                background: "#3b82f6",
+                                border: "4px solid #06b6d4",
                                 zIndex: 2,
                             }}></div>
 
@@ -280,7 +283,7 @@ export default function Landing() {
                                 marginLeft: idx % 2 === 0 ? "0" : "2rem", // spacing from line
                                 marginRight: idx % 2 !== 0 ? "0" : "2rem",
                             }}>
-                                <h3 style={{ marginBottom: "0.5rem", color: "#facc15" }}>{item.title}</h3>
+                                <h3 style={{ marginBottom: "0.5rem", color: "#06b6d4" }}>{item.title}</h3>
                                 <p>{item.description}</p>
                             </div>
                         </div>
@@ -294,8 +297,8 @@ export default function Landing() {
 
       @keyframes lineGlow {
         0% { height: 0%; box-shadow: none; }
-        50% { height: 50%; box-shadow: 0 0 15px #22d3ee, 0 0 25px #facc15; }
-        100% { height: 100%; box-shadow: 0 0 10px #22d3ee, 0 0 20px #facc15; }
+        50% { height: 50%; box-shadow: 0 0 15px #06b6d4, 0 0 25px #3b82f6; }
+        100% { height: 100%; box-shadow: 0 0 10px #06b6d4, 0 0 20px #3b82f6; }
       }
     `}</style>
                 </div>
@@ -310,7 +313,7 @@ export default function Landing() {
                     {team.map((member, idx) => (
                         <div key={idx} style={{ background: "#1e293b", padding: "1.5rem", borderRadius: "12px", boxShadow: "0 8px 16px rgba(0,0,0,0.3)" }}>
                             <img src={member.image} alt={member.name} style={{ width: "100px", borderRadius: "50%", marginBottom: "1rem" }} />
-                            <h3 style={{ marginBottom: "0.3rem", color: "#facc15" }}>{member.name}</h3>
+                            <h3 style={{ marginBottom: "0.3rem", color: "#06b6d4" }}>{member.name}</h3>
                             <p>{member.role}</p>
                         </div>
                     ))}
@@ -320,13 +323,13 @@ export default function Landing() {
             {/* FOOTER */}
             <footer style={{ padding: "2rem", background: "#0f172a", color: "white", textAlign: "center", borderTop: "1px solid #1e293b" }}>
                 <p>📍 123 Crypto St, Blockchain City</p>
-                <p>✉️ contact@yao-blockchain.com</p>
+                <p>✉️ contact@cryptoSource-blockchain.com</p>
                 <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
-                    <a href="#" style={{ color: "#22d3ee" }}>Twitter</a>
-                    <a href="#" style={{ color: "#facc15" }}>Discord</a>
+                    <a href="#" style={{ color: "#06b6d4" }}>Twitter</a>
+                    <a href="#" style={{ color: "#3b82f6" }}>Discord</a>
                     <a href="#" style={{ color: "#4ade80" }}>Telegram</a>
                 </div>
-                <p style={{ marginTop: "1rem" }}>© 2026 YAO Blockchain</p>
+                <p style={{ marginTop: "1rem" }}>© 2026 cryptoSource Blockchain</p>
             </footer>
         </div>
     );
