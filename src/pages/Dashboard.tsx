@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
 import CapyBarra from "../assets/capybarra.png";
-import basicCapybara from "../assets/basic-plan.png";
-import standardCapybara from "../assets/standard-plan.png";
-import premiumCapybara from "../assets/premium-plan.png";
-
+// serve capybara images from public/assets (ensure files are in public/assets/)
+const BASIC_CAPYBARA = "/assets/basic-plan.png";
+const SUIT_CAPYBARA = "/assets/standard-plan.png";
+const GOLD_CAPYBARA = "/assets/premium-plan.png";
 
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
 
@@ -237,11 +237,11 @@ export default function Dashboard() {
 
         const invested = getTotalInvested();
 
-        if (invested >= 500) return premiumCapybara;
+        if (invested >= 500) return GOLD_CAPYBARA;
 
-        if (invested >= 100) return standardCapybara;
+        if (invested >= 100) return SUIT_CAPYBARA;
 
-        return basicCapybara;
+        return BASIC_CAPYBARA;
 
     };
 
@@ -297,15 +297,15 @@ export default function Dashboard() {
 
         if (totalInvested >= 500) {
 
-            return { tier: "premium", name: "Premium Capybara", description: "You've unlocked the premium tier!" };
+            return { tier: "gold", name: "Gold Capybara", description: "You've unlocked the gold tier!", image: GOLD_CAPYBARA };
 
-        } else if (totalInvested >= 200) {
+        } else if (totalInvested >= 100) {
 
-            return { tier: "standard", name: "Standard Capybara", description: "You've reached the standard tier!" };
+            return { tier: "suit", name: "Suit Capybara", description: "You've unlocked the suit tier!", image: SUIT_CAPYBARA };
 
         } else {
 
-            return { tier: "basic", name: "Basic Capybara", description: "Welcome to the basic tier!" };
+            return { tier: "basic", name: "Basic Capybara", description: "Welcome to the basic tier!", image: BASIC_CAPYBARA };
 
         }
 

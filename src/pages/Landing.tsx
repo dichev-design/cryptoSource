@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CapyBarra from "../assets/capybarra.png";
-import AliceImg from "../assets/alice.jpg";
-import BobImg from "../assets/bob.jpg";
-import CharlieImg from "../assets/charlie.jpg";
+// serve team images from public/assets to avoid case-sensitivity/build issues
+const ALICE = "/assets/alice.jpg";
+const BOB = "/assets/bob.jpg";
+const CHARLIE = "/assets/charlie.jpg";
 
 export default function Landing() {
     // Animated counters hook
@@ -44,9 +45,9 @@ export default function Landing() {
 
     // Team members
     const team = [
-        { name: "Alice", role: "CEO", image: AliceImg },
-        { name: "Bob", role: "Lead Developer", image: BobImg },
-        { name: "Charlie", role: "Designer", image: CharlieImg },
+        { name: "Alice", role: "CEO", image: ALICE },
+        { name: "Bob", role: "Lead Developer", image: BOB },
+        { name: "Charlie", role: "Designer", image: CHARLIE },
     ];
 
     // Roadmap items
