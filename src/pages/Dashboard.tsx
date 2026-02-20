@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
 import ProfitSummaryCard from "../components/ProfitSummaryCard";
+import Loader from "../components/Loader";
 
 // images are in public/ (root), use root paths
 const BASIC_CAPYBARA = "/basic-plan.png";
@@ -10,7 +11,7 @@ const GOLD_CAPYBARA = "/premium-plan.png";
 
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
 
-export default function Dashboard() {
+function DashboardContent() {
     const { user, logout } = useAuth();
 
     const [data, setData] = useState<DashboardData>({
@@ -132,10 +133,7 @@ export default function Dashboard() {
         setWithdrawAmount("");
     };
 
-    // Character tier based on total invested amounts (sum of invested principals)
-    // $0 -> Basic Capybara
-    // $100+ -> Suit Capybara
-    // $500+ -> Gold Capybara
+    // Character tier
     const getCharacterTier = () => {
         const totalInvested = data.investments.reduce((s, inv) => s + inv.amount, 0);
         if (totalInvested >= 500) {
@@ -323,8 +321,8 @@ export default function Dashboard() {
                                 src={character.image}
                                 alt={character.name}
                                 style={{
-                                    width: "320px",
-                                    height: "320px",
+                                    width: "150px",
+                                    height: "150px",
                                     objectFit: "contain",
                                     marginBottom: "10px"
                                 }}
@@ -436,4 +434,16 @@ export default function Dashboard() {
             </footer>
         </div>
     );
+}
+
+export default function Dashboard() {
+    const [showLoader, setShowLoader] = useState(true);
+
+    const handleLoaderComplete = () => setShowLoader(false);
+
+    if (showLoader) {
+        return <Loader onComplete={handleLoaderComplete} minDuration={2500} capybara={BASIC_CAPYBARA} />;
+    }
+
+    return <DashboardContent />;
 }

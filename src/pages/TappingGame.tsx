@@ -1,27 +1,41 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import CapyBarra from "../assets/capybarra.png";
-import "../styles/tapping-game.css";
-import {
-    initTelegram,
-    getTelegramUser,
-    isInTelegram,
-    triggerHaptic,
-    triggerNotification,
-    applySafeAreaInsets
-} from "../services/telegramService";
-import { claimCoinReward, syncGameData } from "../services/gameApi";
+import Loader from "../components/Loader";
+import "./TappingGame.css";
 
-interface FloatingCoin {
+const BASIC_CAPYBARA = "/basic-plan.png";
+
+// Telegram integration helpers
+const isInTelegram = () => typeof window !== "undefined" && window.Telegram?.WebApp;
+const getTelegramUser = () => window.Telegram?.WebApp?.initDataUnsafe?.user;
+const initTelegram = () => window.Telegram?.WebApp?.ready?.();
+const applySafeAreaInsets = () => window.Telegram?.WebApp?.expand?.();
+const triggerHaptic = (type: "light" | "medium" | "heavy" | "rigid" | "soft") => window.Telegram?.WebApp?.hapticFeedback?.impactOccurred?.(type);
+const triggerNotification = (type: "error" | "success" | "warning") => window.Telegram?.WebApp?.hapticFeedback?.notificationOccurred?.(type);
+
+// API calls
+const syncGameData = async (userId: string, coins: number, claimedRewards: number) => {
+    // Mock implementation - replace with actual API call
+    console.log("Syncing game data:", { userId, coins, claimedRewards });
+    return Promise.resolve();
+};
+
+const claimCoinReward = async (userId: string, coins: number) => {
+    // Mock implementation - replace with actual API call
+    console.log("Claiming reward:", { userId, coins });
+    return Promise.resolve({ success: true });
+};
+
+type FloatingCoin = {
     id: string;
     x: number;
     y: number;
-}
+};
 
-export default function TappingGame() {
-    const navigate = useNavigate();
+function TappingGameContent() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [coins, setCoins] = useState(0);
     const [floatingCoins, setFloatingCoins] = useState<FloatingCoin[]>([]);
     const [coinsPerTap] = useState(1);
@@ -33,7 +47,7 @@ export default function TappingGame() {
     const REWARD_AMOUNT = 10;
 
     // Get user ID or use guest ID
-    const userId = user?.id || 'guest';
+    const userId = user?.id || "guest";
     const isGuest = !user;
 
     // Initialize Telegram
@@ -41,8 +55,8 @@ export default function TappingGame() {
         if (inTelegram) {
             initTelegram();
             applySafeAreaInsets();
-            console.log('Telegram app initialized');
-            console.log('Telegram user:', telegramUser);
+            console.log("Telegram app initialized");
+            console.log("Telegram user:", telegramUser);
         }
     }, [inTelegram, telegramUser]);
 
@@ -66,7 +80,7 @@ export default function TappingGame() {
             JSON.stringify({
                 coins,
                 claimedRewards,
-                lastUpdated: Date.now(),
+                lastUpdated: Date.now()
             })
         );
 
@@ -74,7 +88,7 @@ export default function TappingGame() {
         if (!isGuest) {
             const syncInterval = setInterval(() => {
                 syncGameData(userId, coins, claimedRewards).catch((err) => {
-                    console.warn('Failed to sync game data:', err);
+                    console.warn("Failed to sync game data:", err);
                 });
             }, 10000);
 
@@ -87,10 +101,10 @@ export default function TappingGame() {
         setCoins((prev) => prev + coinsPerTap);
 
         // Haptic feedback
-        triggerHaptic('light');
+        triggerHaptic("light");
 
         // Create floating coin animation
-        const coinId = crypto.randomUUID();
+        const coinId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
         setFloatingCoins((prev) => [...prev, { id: coinId, x, y }]);
 
         // Remove floating coin after animation
@@ -119,8 +133,8 @@ export default function TappingGame() {
 
         // If guest, redirect to login
         if (isGuest) {
-            alert('Please login to claim your reward!');
-            navigate('/login');
+            alert("Please login to claim your reward!");
+            navigate("/login");
             return;
         }
 
@@ -134,32 +148,31 @@ export default function TappingGame() {
                     setClaimedRewards((prev) => prev + REWARD_AMOUNT);
 
                     // Success feedback
-                    triggerNotification('success');
+                    triggerNotification("success");
 
                     alert(`Claimed $${REWARD_AMOUNT}! Added to your account balance.`);
                 } else {
-                    triggerNotification('error');
-                    alert(response.message || 'Failed to claim reward');
+                    triggerNotification("error");
+                    alert("Failed to claim reward");
                 }
             } catch (error) {
-                console.error('Error claiming reward:', error);
-                triggerNotification('error');
-                alert('Error claiming reward. Please try again.');
+                console.error("Error claiming reward:", error);
+                triggerNotification("error");
+                alert("Error claiming reward. Please try again.");
             }
         }
     };
 
     const getCharacterImage = () => {
-        if (coins < 1000) return CapyBarra;
-        if (coins < 50000) return CapyBarra;
-        return CapyBarra; // Will be different images for different tiers
+        // Use public images
+        return "/basic-plan.png";
     };
 
     const remainingCoins = Math.max(0, COINS_FOR_REWARD - coins);
     const rewardProgress = (coins / COINS_FOR_REWARD) * 100;
 
     return (
-        <div className={`tapping-game-container ${inTelegram ? 'in-telegram' : ''}`}>
+        <div className={`tapping-game-container ${inTelegram ? "in-telegram" : ""}`}>
             {/* MAIN GAME AREA */}
             <div className="game-area">
                 {/* CHARACTER */}
@@ -186,7 +199,7 @@ export default function TappingGame() {
                     className="tap-area"
                     onClick={handleTap}
                     onTouchStart={handleTouchTap}
-                    style={{ touchAction: 'manipulation' }}
+                    style={{ touchAction: "manipulation" }}
                 >
                     <div className="tap-circle">
                         <span className="tap-text">TAP!</span>
@@ -199,7 +212,7 @@ export default function TappingGame() {
                             className="floating-coin"
                             style={{
                                 left: `${coin.x}px`,
-                                top: `${coin.y}px`,
+                                top: `${coin.y}px`
                             }}
                         >
                             +{coinsPerTap}
@@ -232,7 +245,7 @@ export default function TappingGame() {
                                 💰 Claim ${REWARD_AMOUNT} Reward
                             </button>
                             {isGuest && (
-                                <p className="coins-needed" style={{ color: '#06b6d4', marginTop: '1rem' }}>
+                                <p className="coins-needed" style={{ color: "#06b6d4", marginTop: "1rem" }}>
                                     Login to claim your reward!
                                 </p>
                             )}
@@ -261,11 +274,23 @@ export default function TappingGame() {
             <footer className="game-footer">
                 <button
                     className="back-button"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate("/")}
                 >
                     ← Back
                 </button>
             </footer>
         </div>
     );
+}
+
+export default function TappingGame() {
+    const [showLoader, setShowLoader] = useState(true);
+
+    const handleLoaderComplete = () => setShowLoader(false);
+
+    if (showLoader) {
+        return <Loader onComplete={handleLoaderComplete} minDuration={2500} capybara={BASIC_CAPYBARA} />;
+    }
+
+    return <TappingGameContent />;
 }
