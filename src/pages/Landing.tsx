@@ -93,7 +93,7 @@ export default function Landing() {
                             Mine. Invest. Dominate.
                         </h1>
                         <p style={{ marginBottom: "2rem", fontSize: "1.2rem" }}>
-                            Join the most addictive blockchain investment simulator. Grow your balance, unlock rewards, and become a crypto tycoon.
+                            Join Wick the most addictive blockchain investment simulator. Grow your balance, unlock rewards, and become a crypto tycoon.
                         </p>
                         <Link to="/register" style={{
                             padding: "0.8rem 1.5rem",
