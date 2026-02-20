@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CapyBarra from "../assets/capybarra.png";
-import AliceImg from "../assets/Alice.jpg";
-import BobImg from "../assets/Bob.jpg";
-import CharlieImg from "../assets/Charlie.jpg";
+import AliceImg from "../assets/alice.jpg";
+import BobImg from "../assets/bob.jpg";
+import CharlieImg from "../assets/charlie.jpg";
 
 export default function Landing() {
     // Animated counters hook
