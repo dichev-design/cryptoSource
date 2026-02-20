@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
 import CapyBarra from "../assets/capybarra.png";
+import basicCapybara from "../assets/basic-plan.png";
+import standardCapybara from "../assets/standard-plan.png";
+import premiumCapybara from "../assets/premium-plan.png";
 
 
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
@@ -214,6 +217,31 @@ export default function Dashboard() {
         );
 
         return data.balance + investmentValue;
+
+    };
+
+    const getTotalInvested = () => {
+
+        return data.investments.reduce(
+
+            (total, inv) => total + inv.amount,
+
+            0
+
+        );
+
+    };
+
+
+    const getCharacter = () => {
+
+        const invested = getTotalInvested();
+
+        if (invested >= 500) return premiumCapybara;
+
+        if (invested >= 100) return standardCapybara;
+
+        return basicCapybara;
 
     };
 
@@ -455,7 +483,7 @@ export default function Dashboard() {
                     </div>
 
 
-                    {/* CHARACTER */}
+                    {/* CHARACTER
 
                     <div style={cardStyle}>
 
@@ -498,6 +526,32 @@ export default function Dashboard() {
                             </p>
 
                         </div>
+
+                    </div> */}
+
+                    {/* Character Card */}
+
+                    <div className="card">
+
+                        <h2>Your Investor</h2>
+
+                        <img
+
+                            src={getCharacter()}
+
+                            style={{
+
+                                width: "320px",
+
+                                display: "block",
+
+                                margin: "auto",
+
+                                filter: "drop-shadow(0 0 20px cyan)"
+
+                            }}
+
+                        />
 
                     </div>
 
