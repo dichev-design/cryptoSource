@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
 import ProfitSummaryCard from "../components/ProfitSummaryCard";
 import Loader from "../components/Loader";
+import Footer from "../components/Footer";
 
 // images are in public/ (root), use root paths
 const BASIC_CAPYBARA = "/basic-plan.png";
@@ -417,21 +418,8 @@ function DashboardContent() {
                         )}
                     </div>
                 </div>
+                <Footer />
             </div>
-
-            <footer
-                style={{
-                    marginTop: "50px",
-                    padding: "20px",
-                    textAlign: "center",
-                    borderTop: "1px solid #334155",
-                    color: "#94a3b8"
-                }}
-            >
-                © 2026 CryptoSource
-                <br />
-                contact@cryptosource.com
-            </footer>
         </div>
     );
 }

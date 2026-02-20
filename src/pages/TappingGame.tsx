@@ -34,7 +34,7 @@ type FloatingCoin = {
 };
 
 function TappingGameContent() {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [coins, setCoins] = useState(0);
     const [floatingCoins, setFloatingCoins] = useState<FloatingCoin[]>([]);

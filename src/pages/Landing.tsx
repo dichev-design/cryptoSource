@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CapyBarra from "../assets/capybarra.png";
+import Footer from "../components/Footer";
 // serve team images from public/assets to avoid case-sensitivity/build issues
 const ALICE = "/alice.jpg";
 const BOB = "/bob.jpg";
@@ -342,17 +343,7 @@ export default function Landing() {
             </section>
 
             {/* FOOTER */}
-            < footer style={{ padding: "2rem", background: "#0f172a", color: "white", textAlign: "center", borderTop: "1px solid #1e293b" }
-            }>
-                <p>📍 123 Crypto St, Blockchain City</p>
-                <p>✉️ contact@cryptoSource-blockchain.com</p>
-                <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", gap: "1rem" }}>
-                    <a href="#" style={{ color: "#06b6d4" }}>Twitter</a>
-                    <a href="#" style={{ color: "#3b82f6" }}>Discord</a>
-                    <a href="#" style={{ color: "#4ade80" }}>Telegram</a>
-                </div>
-                <p style={{ marginTop: "1rem" }}>© 2026 cryptoSource Blockchain</p>
-            </footer >
+            <Footer />
         </div >
     );
 }
