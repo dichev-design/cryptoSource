@@ -3,9 +3,9 @@ import { useAuth } from "../context/AuthContext";
 import type { DashboardData, Investment } from "../types/dashboard";
 import CapyBarra from "../assets/capybarra.png";
 // serve capybara images from public/assets (ensure files are in public/assets/)
-const BASIC_CAPYBARA = "/assets/basic-plan.png";
-const SUIT_CAPYBARA = "/assets/standard-plan.png";
-const GOLD_CAPYBARA = "/assets/premium-plan.png";
+const BASIC_CAPYBARA = "/basic-plan.png";
+const SUIT_CAPYBARA = "/standard-plan.png";
+const GOLD_CAPYBARA = "/premium-plan.png";
 
 const getStorageKey = (userId: string) => `yao_user_data_${userId}`;
 

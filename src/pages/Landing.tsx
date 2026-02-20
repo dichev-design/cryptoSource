@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CapyBarra from "../assets/capybarra.png";
 // serve team images from public/assets to avoid case-sensitivity/build issues
-const ALICE = "/assets/alice.jpg";
-const BOB = "/assets/bob.jpg";
-const CHARLIE = "/assets/charlie.jpg";
+const ALICE = "/alice.jpg";
+const BOB = "/bob.jpg";
+const CHARLIE = "/charlie.jpg";
 
 export default function Landing() {
     // Animated counters hook
