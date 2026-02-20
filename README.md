@@ -1,73 +1,149 @@
-# React + TypeScript + Vite
+# 🪙 CryptoSource — Gamified Crypto Investment Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live Demo:** https://crypto-source-ivory.vercel.app/
 
-Currently, two official plugins are available:
+CryptoSource is a fully interactive, gamified cryptocurrency investment dashboard built with **React, TypeScript, and modern frontend architecture**. It simulates a real-world crypto investment platform with persistent user data, animated UI, and a character-based progression system.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was designed to demonstrate production-level frontend skills, including state management, UX design, data persistence, and scalable component architecture.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# ✨ Features
 
-## Expanding the ESLint configuration
+## 🔐 Authentication System
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* Register and login
+* Persistent sessions using Local Storage
+* Protected routes
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 💰 Investment Dashboard
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* Deposit funds
+* Invest balance
+* Real-time simulated profit growth
+* Withdraw anytime
+* Persistent per-user financial data
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🧍 Capybara Character Progression System
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Each investment tier unlocks a unique character:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* Basic Plan → Base Capybara
+* Standard Plan → Suit Capybara
+* Premium Plan → Gold Capybara
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This adds a gamified progression layer to the platform.
+
+## 📈 Profit Summary System
+
+* Real-time profit tracking
+* Animated balance updates
+* Visual performance indicators
+
+## 👛 Wallet System
+
+* Simulated wallet connection
+* Persistent wallet address
+
+## 🎨 Advanced UI/UX
+
+* Fully responsive design
+* Animated components
+* Custom loading screen
+* Modern SaaS-style layout
+* Professional color system
+
+## 🚀 Production Deployment
+
+* Deployed on Vercel
+* Optimized production build
+* Fast loading
+
+---
+
+# 🛠 Tech Stack
+
+**Frontend**
+
+* React
+* TypeScript
+* Vite
+
+**Animation**
+
+* Framer Motion
+
+**State Management**
+
+* React Context API
+* Custom Hooks
+
+**Persistence**
+
+* Local Storage
+
+**Deployment**
+
+* Vercel
+
+---
+
+# 🧠 Architecture Highlights
+
+This project demonstrates:
+
+* Component-based architecture
+* Scalable folder structure
+* Persistent application state
+* Dashboard logic systems
+* Clean UI separation
+* Production deployment workflow
+
+---
+
+# 🎯 Purpose of This Project
+
+This project was built to showcase my ability to:
+
+* Build complete frontend applications
+* Design real product-level interfaces
+* Implement complex dashboard logic
+* Create engaging user experiences
+* Deliver production-ready projects
+
+---
+
+# 📸 Preview
+
+![Preview](preview.png)
+
+---
+
+# 👨‍💻 Author
+
+**Jivko Dichev**
+
+Frontend Developer
+
+GitHub: https://github.com/dichev-design
+
+---
+
+# 📬 Contact
+
+If you'd like to work with me, feel free to reach out.
+
+---
+
+# ⭐ Future Improvements
+
+* Real API integration
+* Blockchain wallet connection
+* Backend database
+* Multiplayer / leaderboard system
+
+---
+
+# 📄 License
+
+This project is for portfolio purposes.
